@@ -6,6 +6,8 @@ public class Sistema
 {
     ArrayList<GrupoBotones> cuadros;
     Comunicador comunicador;
+    private String nombrecliente = "Cliente";
+    private String nombreservidor = "Servidor";
 
     public Sistema() {
         this.cuadros = new ArrayList();
@@ -42,6 +44,22 @@ public class Sistema
 
     public void setComunicador(Comunicador comunicador) {
         this.comunicador = comunicador;
+    }
+
+    public String getNombrecliente() {
+        return nombrecliente;
+    }
+
+    public void setNombrecliente(String nombrecliente) {
+        this.nombrecliente = nombrecliente;
+    }
+
+    public String getNombreservidor() {
+        return nombreservidor;
+    }
+
+    public void setNombreservidor(String nombreservidor) {
+        this.nombreservidor = nombreservidor;
     }
     
     

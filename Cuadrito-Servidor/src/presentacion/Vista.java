@@ -53,6 +53,8 @@ public class Vista extends javax.swing.JFrame {
         jLColumnas = new javax.swing.JLabel();
         jTColumnas = new javax.swing.JTextField();
         jBCrearTablero = new javax.swing.JButton();
+        jLNombre = new javax.swing.JLabel();
+        jTNombre = new javax.swing.JTextField();
         jPTablero = new javax.swing.JPanel();
         jPConexion = new javax.swing.JPanel();
         jBPermitirConexion = new javax.swing.JButton();
@@ -66,13 +68,17 @@ public class Vista extends javax.swing.JFrame {
 
         jLFilas.setText("Filas");
 
-        jTFilas.setText("5");
+        jTFilas.setText("10");
 
         jLColumnas.setText("Columnas");
 
-        jTColumnas.setText("5");
+        jTColumnas.setText("10");
 
         jBCrearTablero.setText("Crear Tablero");
+
+        jLNombre.setText("Nombre");
+
+        jTNombre.setText("Servidor");
 
         javax.swing.GroupLayout jPDatosTableroLayout = new javax.swing.GroupLayout(jPDatosTablero);
         jPDatosTablero.setLayout(jPDatosTableroLayout);
@@ -88,8 +94,12 @@ public class Vista extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jTColumnas, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLNombre)
+                .addGap(18, 18, 18)
+                .addComponent(jTNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                 .addComponent(jBCrearTablero)
-                .addContainerGap(267, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPDatosTableroLayout.setVerticalGroup(
             jPDatosTableroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,7 +110,9 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(jTFilas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLColumnas)
                     .addComponent(jTColumnas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBCrearTablero))
+                    .addComponent(jBCrearTablero)
+                    .addComponent(jLNombre)
+                    .addComponent(jTNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -160,7 +172,7 @@ public class Vista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPConexion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -186,6 +198,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton jBPermitirConexion;
     private javax.swing.JLabel jLColumnas;
     private javax.swing.JLabel jLFilas;
+    private javax.swing.JLabel jLNombre;
     private javax.swing.JPanel jPConexion;
     private javax.swing.JPanel jPDatosTablero;
     private javax.swing.JPanel jPTablero;
@@ -194,6 +207,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JTextField jTConexion;
     private javax.swing.JTextField jTFilas;
     private javax.swing.JTextArea jTMensajes;
+    private javax.swing.JTextField jTNombre;
     // End of variables declaration//GEN-END:variables
 
     public Controlador getControlador() {
@@ -306,6 +320,22 @@ public class Vista extends javax.swing.JFrame {
 
     public void setjTMensajes(JTextArea jTMensajes) {
         this.jTMensajes = jTMensajes;
+    }
+
+    public JLabel getjLNombre() {
+        return jLNombre;
+    }
+
+    public void setjLNombre(JLabel jLNombre) {
+        this.jLNombre = jLNombre;
+    }
+
+    public JTextField getjTNombre() {
+        return jTNombre;
+    }
+
+    public void setjTNombre(JTextField jTNombre) {
+        this.jTNombre = jTNombre;
     }
     
     

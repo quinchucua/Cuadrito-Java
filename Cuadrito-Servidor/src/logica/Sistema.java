@@ -8,6 +8,8 @@ public class Sistema
     Comunicador comunicador;
     private int filas;
     private int columnas;
+    private String nombreservidor = "Servidor";
+    private String nombrecliente = "Cliente";
 
     public Sistema() {
         this.cuadros = new ArrayList();
@@ -66,6 +68,22 @@ public class Sistema
 
     public void setColumnas(int columnas) {
         this.columnas = columnas;
+    }
+
+    public String getNombreservidor() {
+        return nombreservidor;
+    }
+
+    public void setNombreservidor(String nombreservidor) {
+        this.nombreservidor = nombreservidor;
+    }
+
+    public String getNombrecliente() {
+        return nombrecliente;
+    }
+
+    public void setNombrecliente(String nombrecliente) {
+        this.nombrecliente = nombrecliente;
     }
     
     

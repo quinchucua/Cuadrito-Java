@@ -18,31 +18,31 @@ public class Comunicador implements Runnable {
 
     static private final int PUERTO_SALIDA = 9090;
     static private final int TIMEOUT = 3000; // 3 segundos
-    
+
     private ServerSocket server;
     private Socket cliente;
     private int puerto;
     private Thread hiloConexiones;
     private boolean esperandoConexiones;
-    
+
     private StringBuffer sbMensajes;
-    private ArrayList <Cliente> listaClientes;
-    
+    private ArrayList<Cliente> listaClientes;
+
     private boolean comandoValido;
     private boolean clienteconectado;
-    
+
     private Sistema sistema;
 
     public Comunicador(Sistema sistema) {
-        listaClientes = new ArrayList<Cliente>();        
-        sbMensajes = new StringBuffer();  
+        listaClientes = new ArrayList<Cliente>();
+        sbMensajes = new StringBuffer();
         esperandoConexiones = true;
-        this.sistema=sistema;
-    }    
-    
-    public void activarEsperaConexiones() throws IOException{
+        this.sistema = sistema;
+    }
+
+    public void activarEsperaConexiones() throws IOException {
         server = new ServerSocket(PUERTO_SALIDA);
-        hiloConexiones = new Thread(this);        
+        hiloConexiones = new Thread(this);
         hiloConexiones.start();
     }
 
@@ -56,13 +56,13 @@ public class Comunicador implements Runnable {
 
     public StringBuffer getSbMensajes() {
         return sbMensajes;
-    }  
+    }
 
-    public void enviarMensaje(String msg) throws IOException {        
+    public void enviarMensaje(String msg) throws IOException {
         // Enviar este mensaje a todos los clientes
         Cliente host;
-        sbMensajes.append(msg + "\n");
-        for(int c = 0; c < listaClientes.size(); c++){
+        sbMensajes.append(this.sistema.getNombreservidor() + " : " + msg + "\n");
+        for (int c = 0; c < listaClientes.size(); c++) {
             host = listaClientes.get(c);
             host.enviarMensaje(msg);
         }
@@ -70,7 +70,7 @@ public class Comunicador implements Runnable {
 
     @Override
     public void run() {
-        while(esperandoConexiones && this.listaClientes.size()==0){
+        while (esperandoConexiones && this.listaClientes.size() == 0) {
             System.out.println("Permitiendo conexion");
             try {
                 cliente = server.accept(); //espera a que alguien se conecte
@@ -79,49 +79,22 @@ public class Comunicador implements Runnable {
                 listaClientes.add(nuevoCliente);
                 //nuevoCliente.start();
                 validarComando(this.listaClientes.get(0).leerMensaje());
-                if(this.comandoValido)
-                {
-                    this.clienteconectado=true;
-                    enviarMensaje("OK,"+this.sistema.getFilas()+","+this.sistema.getColumnas());
+                if (this.comandoValido) {
+                    this.clienteconectado = true;
+
+                    enviarMensaje("OK," + this.sistema.getFilas() + "," + this.sistema.getColumnas());
                     System.out.println("La conexion fue aceptada");
-                }else
-                {
+                    comunicaciondejuego();
+                } else {
                     enviarMensaje("NK");
                     detenerConexiones();
                     System.out.println("La conexion fue rechazada");
                 }
-                enviarMensaje("Se ha conectado " + nuevoCliente.getClienteConectado());
+
             } catch (IOException ex) {
-            }            
+            }
         }
     }
-
-    public boolean isEsperandoConexiones() {
-        return esperandoConexiones;
-    }
-
-    public void setEsperandoConexiones(boolean esperandoConexiones) {
-        this.esperandoConexiones = esperandoConexiones;
-    }
-
-    public ArrayList<Cliente> getListaClientes() {
-        return listaClientes;
-    }
-
-    public void detenerConexiones() throws IOException {
-        Cliente host;
-        
-        for(int c = 0; c < listaClientes.size(); c++){
-            host = listaClientes.get(c);
-            host.terminarConexiones();
-        }
-    }
-    
-    public boolean isClienteConectado()
-    {
-        return this.clienteconectado;
-    }
-    
 
     private void validarComando(String mensaje) {
         String fecha = mensaje.substring(3, 11);
@@ -153,5 +126,59 @@ public class Comunicador implements Runnable {
 
     }
 
-   
+    private void comunicaciondejuego() throws IOException {
+        String mensaje;
+        mensaje = this.listaClientes.get(0).leerMensaje();
+        validarComando(mensaje);
+        if (this.comandoValido) {
+            System.out.println(mensaje.substring(20, mensaje.length()));
+            this.sistema.setNombrecliente(mensaje.substring(20));
+            enviarMensaje("OK," + this.sistema.getNombreservidor());
+        }
+
+        mensaje = this.listaClientes.get(0).leerMensaje();
+        validarComando(mensaje);
+        if (this.comandoValido) {
+            int numero = (int) (Math.random() * 2) + 1;
+            enviarMensaje("OK," + numero);
+        }
+
+        System.out.println("Se debe implementar la asignacion de turno desde el servidor");
+        System.out.println("Se deben recibir los comandos de juego");
+    }
+
+    public boolean isEsperandoConexiones() {
+        return esperandoConexiones;
+    }
+
+    public void setEsperandoConexiones(boolean esperandoConexiones) {
+        this.esperandoConexiones = esperandoConexiones;
+    }
+
+    public ArrayList<Cliente> getListaClientes() {
+        return listaClientes;
+    }
+
+    public void detenerConexiones() throws IOException {
+        Cliente host;
+
+        for (int c = 0; c < listaClientes.size(); c++) {
+            host = listaClientes.get(c);
+            host.terminarConexiones();
+        }
+    }
+
+    public boolean isClienteConectado() {
+        return this.clienteconectado;
+    }
+
+    public Sistema getSistema() {
+        return sistema;
+    }
+
+    public void setSistema(Sistema sistema) {
+        this.sistema = sistema;
+    }
+    
+    
 }

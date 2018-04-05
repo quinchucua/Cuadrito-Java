@@ -36,71 +36,33 @@ public class Comunicador implements Runnable {
     private Sistema sistema;
 
     public Comunicador(Sistema sistema) {
-        this.sistema=sistema;
+        this.sistema = sistema;
         conectado = false;
         mensajes = new StringBuffer();
     }
 
-    public String getNombreHost() {
-        return nombreHost;
-    }
-
-    public int getPuerto() {
-        return puerto;
-    }
-
-    public StringBuffer getMensajes() {
-        return mensajes;
-    }
-
-    public boolean isConectado() {
-        return conectado;
-    }
-
     public void conectar(String host, int puerto) throws IOException {
+
         // 1. Establecer contacto
         servidor = new Socket(host, puerto);
+        servidor.setSoTimeout(3000);
 
         //2. Capturar flujos(stream)
         datosEntrada = new DataInputStream(servidor.getInputStream());
         datosSalida = new DataOutputStream(servidor.getOutputStream());
 
-        Date date = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("YYYYMMDD");
-        System.out.println("Fecha: " + dateFormat.format(date));
-
-        DateFormat hourFormat = new SimpleDateFormat("HHmmss");
-        System.out.println("Hora: " + hourFormat.format(date));
-
-        enviarMensaje("QDT"+dateFormat.format(date)+""+hourFormat.format(date)+"INI");//se envia el mensaje con la cabecera para aceptar la conexion
-        String mensaje = leermensaje();//se lee y valida el mensaje del servidor para saber si se acepto la conexion
-        validarComando(mensaje);//se valida si el mensaje es valido
-        
-        //si el mensaje es valido y la respuesta es OK se valida la conexion y se crea el tablero
-        if (this.comandoValido && "OK".equals(mensaje.substring(0, 2))) {
-            System.out.println("La conexion es valida");
-            conectado = true;
-            this.mensajes.append("Se realizo la conexion con " + host + ":" + puerto + "\n");
-            
-            System.out.println("filas "+mensaje.substring(3, 5));
-            System.out.println("Columnas "+mensaje.substring(6, 8));
-            this.sistema.crearcuadros(Integer.parseInt(mensaje.substring(3, 5)), Integer.parseInt(mensaje.substring(6, 8)));
-        //si alguna de las condiciones es falsa se desconecta del servidor
-        } else {
-            System.out.println("La conexion fue rechazada");
-            desconectar();
-        }
         //hiloLectura = new Thread(this);
         //hiloLectura.start();
+        enviarcabecera();
     }
-    
+
     //envia el mensaje al servidor 
     public void enviarMensaje(String msg) throws IOException {
         datosSalida.write(msg.getBytes());
-        mensajes.append(">: " + msg + "\n");
-        System.out.println(">: " + msg + "\n");
+        mensajes.append(this.sistema.getNombrecliente()+" : " + msg + "\n");
+        System.out.println(this.sistema.getNombrecliente()+" : " + msg + "\n");
     }
-    
+
     //lee los mensajes
     public String leermensaje() throws IOException {
         byte buffer[] = new byte[256];
@@ -109,11 +71,11 @@ public class Comunicador implements Runnable {
         datosEntrada.read(buffer);
         // si llego aqui, es porque algo llego
         msg = new String(buffer);
-        mensajes.append("<: " + msg + "\n");
+        mensajes.append(this.sistema.getNombreservidor()+" : " + msg + "\n");
         recibeMensaje = true;
         return msg;
     }
-    
+
     //hilo para leer mensajes, no se esta iniciando porque no se esta utilizando
     //conectando multiples usuarios
     @Override
@@ -127,21 +89,13 @@ public class Comunicador implements Runnable {
             }
         }
     }
-    
+
     //permite desconectarse del servidor
     public void desconectar() throws IOException {
         conectado = false;
         datosEntrada.close();
         datosSalida.close();
         servidor.close();
-    }
-
-    public boolean isRecibeMensaje() {
-        return recibeMensaje;
-    }
-
-    public void setRecibeMensaje(boolean recibeMensaje) {
-        this.recibeMensaje = recibeMensaje;
     }
 
     private void validarComando(String mensaje) {
@@ -170,7 +124,85 @@ public class Comunicador implements Runnable {
         } else {
             comandoValido = false;
         }
-        System.out.println(param);
+        System.out.println("Parametro : "+param);
 
+    }
+
+    public void enviarcabecera() throws IOException {
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("YYYYMMDD");
+        System.out.println("Fecha: " + dateFormat.format(date));
+
+        DateFormat hourFormat = new SimpleDateFormat("HHmmss");
+        System.out.println("Hora: " + hourFormat.format(date));
+
+        enviarMensaje("QDT" + dateFormat.format(date) + "" + hourFormat.format(date) + "INI");//se envia el mensaje con la cabecera para aceptar la conexion
+        String mensaje = leermensaje();//se lee y valida el mensaje del servidor para saber si se acepto la conexion
+        validarComando(mensaje);//se valida si el mensaje es valido
+
+        //si el mensaje es valido y la respuesta es OK se valida la conexion y se crea el tablero
+        if (this.comandoValido && "OK".equals(mensaje.substring(0, 2))) {
+            System.out.println("La conexion es valida");
+            conectado = true;
+            this.mensajes.append("Se realizo la conexion con " + servidor.getInetAddress().getHostName() + ":" + servidor.getPort() + "\n");
+
+            System.out.println("filas " + mensaje.substring(3, 5));
+            System.out.println("Columnas " + mensaje.substring(6, 8));
+            this.sistema.crearcuadros(Integer.parseInt(mensaje.substring(3, 5)), Integer.parseInt(mensaje.substring(6, 8)));
+
+            comunicaciondejuego();//aqui se counica con el servidor para enviar nombre, asignar turno y comunicar acciones de juego
+
+            //si alguna de las condiciones es falsa se desconecta del servidor
+        } else {
+            System.out.println("La conexion fue rechazada");
+            desconectar();
+        }
+    }
+
+    public void comunicaciondejuego() throws IOException {
+        String mensaje;
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("YYYYMMDD");
+        System.out.println("Fecha: " + dateFormat.format(date));
+
+        DateFormat hourFormat = new SimpleDateFormat("HHmmss");
+        System.out.println("Hora: " + hourFormat.format(date));
+        
+        enviarMensaje("QDT" + dateFormat.format(date) + "" + hourFormat.format(date) + "SNM"+this.sistema.getNombrecliente());//se envia el mensaje con nombre de usuario
+        mensaje = leermensaje();//se lee el mensaje con el nombre del servidor
+        validarComando(mensaje);
+        this.sistema.setNombreservidor(mensaje.substring(3));
+        System.out.println(mensaje.substring(3, mensaje.length()));
+        
+        enviarMensaje("QDT" + dateFormat.format(date) + "" + hourFormat.format(date) + "TUR");//se envia el mensaje para saber el turno
+        mensaje = leermensaje();//se lee el mensaje del servidor con el turno para el cliente
+        validarComando(mensaje);
+        System.out.println(mensaje.substring(3, mensaje.length()));
+        
+        System.out.println("Se deben recibir los comandos de juego");
+    }
+
+    public boolean isRecibeMensaje() {
+        return recibeMensaje;
+    }
+
+    public void setRecibeMensaje(boolean recibeMensaje) {
+        this.recibeMensaje = recibeMensaje;
+    }
+
+    public String getNombreHost() {
+        return nombreHost;
+    }
+
+    public int getPuerto() {
+        return puerto;
+    }
+
+    public StringBuffer getMensajes() {
+        return mensajes;
+    }
+
+    public boolean isConectado() {
+        return conectado;
     }
 }

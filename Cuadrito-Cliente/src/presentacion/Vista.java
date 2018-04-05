@@ -6,6 +6,7 @@
 package presentacion;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,7 +17,7 @@ import javax.swing.JTextField;
  *
  * @author ASUS
  */
-public class Vista extends javax.swing.JFrame {
+public class Vista extends JFrame {
 
     /**
      * Creates new form Vista
@@ -34,6 +35,7 @@ public class Vista extends javax.swing.JFrame {
     
     public void agregarcontroladores()
     {
+        this.addWindowListener(controlador);
         this.jBConectarse.addActionListener(controlador);
     }
 
@@ -52,6 +54,8 @@ public class Vista extends javax.swing.JFrame {
         jLPuerto = new javax.swing.JLabel();
         jTPuerto = new javax.swing.JTextField();
         jBConectarse = new javax.swing.JButton();
+        jLNombre = new javax.swing.JLabel();
+        jTNombre = new javax.swing.JTextField();
         jPTablero = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTMensajes = new javax.swing.JTextArea();
@@ -71,6 +75,10 @@ public class Vista extends javax.swing.JFrame {
 
         jBConectarse.setText("Conectarse");
 
+        jLNombre.setText("Nombre");
+
+        jTNombre.setText("Cliente");
+
         javax.swing.GroupLayout jPDatosConexionLayout = new javax.swing.GroupLayout(jPDatosConexion);
         jPDatosConexion.setLayout(jPDatosConexionLayout);
         jPDatosConexionLayout.setHorizontalGroup(
@@ -80,13 +88,17 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(jLDireccionIP)
                 .addGap(18, 18, 18)
                 .addComponent(jTDireccionIP, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addGap(18, 18, 18)
                 .addComponent(jLPuerto)
                 .addGap(18, 18, 18)
                 .addComponent(jTPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLNombre)
+                .addGap(18, 18, 18)
+                .addComponent(jTNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jBConectarse)
-                .addContainerGap(166, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPDatosConexionLayout.setVerticalGroup(
             jPDatosConexionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -97,7 +109,9 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(jTDireccionIP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLPuerto)
                     .addComponent(jTPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBConectarse))
+                    .addComponent(jBConectarse)
+                    .addComponent(jLNombre)
+                    .addComponent(jTNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -128,7 +142,7 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(jPTablero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPDatosConexion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -151,12 +165,14 @@ public class Vista extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBConectarse;
     private javax.swing.JLabel jLDireccionIP;
+    private javax.swing.JLabel jLNombre;
     private javax.swing.JLabel jLPuerto;
     private javax.swing.JPanel jPDatosConexion;
     private javax.swing.JPanel jPTablero;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTDireccionIP;
     private javax.swing.JTextArea jTMensajes;
+    private javax.swing.JTextField jTNombre;
     private javax.swing.JTextField jTPuerto;
     // End of variables declaration//GEN-END:variables
 
@@ -238,6 +254,22 @@ public class Vista extends javax.swing.JFrame {
 
     public void setjTPuerto(JTextField jTPuerto) {
         this.jTPuerto = jTPuerto;
+    }
+
+    public JLabel getjLNombre() {
+        return jLNombre;
+    }
+
+    public void setjLNombre(JLabel jLNombre) {
+        this.jLNombre = jLNombre;
+    }
+
+    public JTextField getjTNombre() {
+        return jTNombre;
+    }
+
+    public void setjTNombre(JTextField jTNombre) {
+        this.jTNombre = jTNombre;
     }
 
        

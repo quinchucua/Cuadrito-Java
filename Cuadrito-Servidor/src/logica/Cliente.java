@@ -45,8 +45,8 @@ public class Cliente extends Thread implements Runnable{
         String mensaje;
         datosEntrada.read(buffer);
         mensaje = new String(buffer);
-        sistemaServer.getSbMensajes().append("Se recibe de " + cliente.getInetAddress().getHostAddress() + ": " + mensaje + "\n");
-        System.out.println("Se recibe de " + cliente.getInetAddress().getHostAddress() + ": " + mensaje + "\n");
+        sistemaServer.getSbMensajes().append(this.sistemaServer.getSistema().getNombrecliente()+" : " + cliente.getInetAddress().getHostAddress() + ": " + mensaje + "\n");
+        System.out.println(this.sistemaServer.getSistema().getNombrecliente()+" : " + cliente.getInetAddress().getHostAddress() + ": " + mensaje + "\n");
         // replicamos a los demás clientes este mensaje
         //sistemaServer.enviarMensaje(cliente.getInetAddress().getHostAddress() + ": " + mensaje);7
         return mensaje;

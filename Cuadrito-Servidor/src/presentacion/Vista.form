@@ -32,7 +32,7 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPConexion" max="32767" attributes="0"/>
-                  <Component id="jScrollPane1" pref="319" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="329" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -79,8 +79,12 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jTColumnas" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jLNombre" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jTNombre" min="-2" pref="94" max="-2" attributes="0"/>
+                  <EmptySpace pref="98" max="32767" attributes="0"/>
                   <Component id="jBCrearTablero" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="267" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -94,6 +98,8 @@
                       <Component id="jLColumnas" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTColumnas" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jBCrearTablero" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLNombre" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTNombre" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="21" max="32767" attributes="0"/>
               </Group>
@@ -108,7 +114,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="jTFilas">
           <Properties>
-            <Property name="text" type="java.lang.String" value="5"/>
+            <Property name="text" type="java.lang.String" value="10"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLColumnas">
@@ -118,12 +124,22 @@
         </Component>
         <Component class="javax.swing.JTextField" name="jTColumnas">
           <Properties>
-            <Property name="text" type="java.lang.String" value="5"/>
+            <Property name="text" type="java.lang.String" value="10"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jBCrearTablero">
           <Properties>
             <Property name="text" type="java.lang.String" value="Crear Tablero"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLNombre">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Nombre"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="jTNombre">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Servidor"/>
           </Properties>
         </Component>
       </SubComponents>
