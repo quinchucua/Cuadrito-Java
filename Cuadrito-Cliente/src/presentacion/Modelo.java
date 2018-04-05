@@ -157,16 +157,19 @@ public class Modelo implements Runnable {
                 }
             }
             //verifica si la celda fue cerrada
-            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red && cierracelda != 2) {
+            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
                 if (gb.getBotoncentral().getBackground() != Color.red) {
                     gb.getBotoncentral().setBackground(Color.red);
                     cierracelda = 2;
                     this.sistema.setTurno(true);
                     //si no cerro ninguna celda hay cambio de turno
-                } else {
+                } 
+                /*
+                else {
                     cierracelda = 0;
                     this.sistema.setTurno(false);
                 }
+                */
             }
             //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
             if (gb.getBotoncentral().getBackground() != Color.red) {

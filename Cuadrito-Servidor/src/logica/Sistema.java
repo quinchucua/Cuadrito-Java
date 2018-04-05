@@ -3,6 +3,7 @@ package logica;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.border.LineBorder;
 
 public class Sistema 
 {
@@ -61,16 +62,20 @@ public class Sistema
                 }
             }
             //verifica si la celda fue cerrada
-            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red && cierracelda!=2) {
+            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
                 if (gb.getBotoncentral().getBackground() != Color.red) {
+                    gb.getBotoncentral().setBorder(new LineBorder(Color.GREEN,5));
                     gb.getBotoncentral().setBackground(Color.red);
                     cierracelda = 2;
                     this.turno = false;
                     //si no cerro ninguna celda hay cambio de turno
-                } else {
+                }
+                /*
+                else {
                     cierracelda = 0;
                     this.turno = true;
                 }
+                */
             }
             //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
             if (gb.getBotoncentral().getBackground() != Color.red) {
