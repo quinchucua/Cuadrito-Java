@@ -62,10 +62,31 @@ public class Modelo implements Runnable {
         this.ventana.getjPTablero().removeAll();
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
             this.ventana.getjPTablero().add(this.sistema.getCuadros().get(i));
+            if (this.sistema.isTurno() == false) {
+                GrupoBotones gb = this.sistema.getCuadros().get(i);
+                gb.getBotoncentral().setEnabled(false);
+                gb.getBotonarriba().setEnabled(false);
+                gb.getBotonizq().setEnabled(false);
+                gb.getBotonabajo().setEnabled(false);
+                gb.getBotonder().setEnabled(false);
+            } else {
+                GrupoBotones gb = this.sistema.getCuadros().get(i);
+                gb.getBotoncentral().setEnabled(true);
+                gb.getBotonarriba().setEnabled(true);
+                gb.getBotonizq().setEnabled(true);
+                gb.getBotonabajo().setEnabled(true);
+                gb.getBotonder().setEnabled(true);
+
+            }
         }
 
         if (this.sistema.getComunicador().isConectado()) {
             this.ventana.getjBConectarse().setBackground(Color.GREEN);
+        }
+
+        if (this.sistema.isTablerocreado()) {
+            agregarcontrolador();
+            this.sistema.setTablerocreado(false);
         }
         this.ventana.getjTMensajes().setText(this.sistema.getComunicador().getMensajes().toString());
 
@@ -73,11 +94,7 @@ public class Modelo implements Runnable {
         this.ventana.getjPTablero().updateUI();
     }
 
-    public void generartablero(int filas, int columnas) {
-
-        this.sistema.borrarcuadros();
-        this.sistema.crearcuadros(filas, columnas);
-
+    public void agregarcontrolador() {
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
             for (int j = 0; j < this.sistema.getCuadros().get(i).getComponentCount(); j++) {
                 JButton boton = (JButton) this.sistema.getCuadros().get(i).getComponent(j);
@@ -113,5 +130,58 @@ public class Modelo implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(Comunicador.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    void pintarboton(int fila, int columna, int orientacion) {
+        System.out.println("Click en boton");
+
+        int juegosigue = 1;
+        int cierracelda = 0;
+        //busca el grupo correspondiente a la fila y columna
+        for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
+            GrupoBotones gb = this.sistema.getCuadros().get(i);
+
+            //caso en el que la fila y columna no corresponden
+            if (gb.getFila() == fila && gb.getColumna() == columna) {
+                if (orientacion == 0) {
+                    gb.getBotonarriba().setBackground(Color.red);
+                }
+                if (orientacion == 1) {
+                    gb.getBotonder().setBackground(Color.red);
+                }
+                if (orientacion == 2) {
+                    gb.getBotonabajo().setBackground(Color.red);
+                }
+                if (orientacion == 3) {
+                    gb.getBotonizq().setBackground(Color.red);
+                }
+            }
+            //verifica si la celda fue cerrada
+            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red && cierracelda != 2) {
+                if (gb.getBotoncentral().getBackground() != Color.red) {
+                    gb.getBotoncentral().setBackground(Color.red);
+                    cierracelda = 2;
+                    this.sistema.setTurno(true);
+                    //si no cerro ninguna celda hay cambio de turno
+                } else {
+                    cierracelda = 0;
+                    this.sistema.setTurno(false);
+                }
+            }
+            //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
+            if (gb.getBotoncentral().getBackground() != Color.red) {
+                juegosigue = 0;
+            }
+        }
+        if (cierracelda == 0) {
+            this.sistema.setTurno(false);
+        }
+
+        try {
+            this.sistema.getComunicador().enviarMovimiento(fila, columna, orientacion);
+        } catch (IOException ex) {
+            Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }

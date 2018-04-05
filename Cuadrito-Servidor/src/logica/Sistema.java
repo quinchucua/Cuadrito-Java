@@ -1,5 +1,7 @@
 package logica;
 
+import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Sistema 
@@ -10,6 +12,7 @@ public class Sistema
     private int columnas;
     private String nombreservidor = "Servidor";
     private String nombrecliente = "Cliente";
+    private boolean turno = false;
 
     public Sistema() {
         this.cuadros = new ArrayList();
@@ -34,6 +37,53 @@ public class Sistema
     {
         return this.cuadros.size()!=0;
     }
+    
+    public void pintarboton(int fila, int columna, int orientacion) throws IOException {
+        int juegosigue = 1;
+        int cierracelda = 0;
+        //busca el grupo correspondiente a la fila y columna
+        for (int i = 0; i < this.cuadros.size(); i++) {
+            GrupoBotones gb = this.cuadros.get(i);
+
+            //caso en el que la fila y columna no corresponden
+            if (gb.getFila() == fila && gb.getColumna() == columna) {
+                if (orientacion == 0) {
+                    gb.getBotonarriba().setBackground(Color.red);
+                }
+                if (orientacion == 1) {
+                    gb.getBotonder().setBackground(Color.red);
+                }
+                if (orientacion == 2) {
+                    gb.getBotonabajo().setBackground(Color.red);
+                }
+                if (orientacion == 3) {
+                    gb.getBotonizq().setBackground(Color.red);
+                }
+            }
+            //verifica si la celda fue cerrada
+            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red && cierracelda!=2) {
+                if (gb.getBotoncentral().getBackground() != Color.red) {
+                    gb.getBotoncentral().setBackground(Color.red);
+                    cierracelda = 2;
+                    this.turno = false;
+                    //si no cerro ninguna celda hay cambio de turno
+                } else {
+                    cierracelda = 0;
+                    this.turno = true;
+                }
+            }
+            //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
+            if (gb.getBotoncentral().getBackground() != Color.red) {
+                juegosigue = 0;
+            }
+        }
+        if(cierracelda==0)
+        {
+            this.turno = true;
+        }
+        this.comunicador.getListaClientes().get(0).respondermovimiento(cierracelda, juegosigue);
+    }
+    
     public ArrayList<GrupoBotones> getCuadros() {
         return cuadros;
     }
@@ -85,7 +135,14 @@ public class Sistema
     public void setNombrecliente(String nombrecliente) {
         this.nombrecliente = nombrecliente;
     }
-    
-    
-    
+
+    public boolean isTurno() {
+        return turno;
+    }
+
+    public void setTurno(boolean turno) {
+        this.turno = turno;
+    }
+
+        
 }

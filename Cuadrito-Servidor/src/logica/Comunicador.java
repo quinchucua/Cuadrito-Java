@@ -141,6 +141,17 @@ public class Comunicador implements Runnable {
         if (this.comandoValido) {
             int numero = (int) (Math.random() * 2) + 1;
             enviarMensaje("OK," + numero);
+            if(numero == 1)
+            {
+                this.sistema.setTurno(false);
+                this.sbMensajes.append("Inicia el Juego, Es turno de "+this.sistema.getNombrecliente()+"\n");
+                this.listaClientes.get(0).getHiloLectura().start();
+            }else
+            {
+                this.sistema.setTurno(true);
+                this.sbMensajes.append("Inicia el Juego, Es turno de "+this.sistema.getNombreservidor()+"\n");
+                this.listaClientes.get(0).getHiloLectura().start();
+            }
         }
 
         System.out.println("Se debe implementar la asignacion de turno desde el servidor");

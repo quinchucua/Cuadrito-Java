@@ -53,7 +53,8 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Izquierda ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                gb.getBotonizq().setBackground(Color.red);
+                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),3);
+                //gb.getBotonizq().setBackground(Color.red);
                 break;
                 
             }
@@ -63,7 +64,8 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Arriba ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                gb.getBotonarriba().setBackground(Color.red);
+                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),0);
+                //gb.getBotonarriba().setBackground(Color.red);
                 break;
             }
             if(e.getSource().equals(gb.getBotonder()))
@@ -72,7 +74,8 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Derecha ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                gb.getBotonder().setBackground(Color.red);
+                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),1);
+                //gb.getBotonder().setBackground(Color.red);
                 break;
             }
             if(e.getSource().equals(gb.getBotonabajo()))
@@ -81,18 +84,11 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Abajo ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                gb.getBotonabajo().setBackground(Color.red);
+                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),2);
+                //gb.getBotonabajo().setBackground(Color.red);
                 break;
             }
-            if(e.getSource().equals(gb.getBotoncentral()))
-            {
-                System.out.println("Evento de : ");
-                System.out.println("Boton : Central ");
-                System.out.println("Fila : "+gb.getFila());
-                System.out.println("Columna : "+gb.getColumna());
-                System.out.println("Se tienen que evaluar las condiciones para cambio de color");
-                break;
-            }
+            
         }
     }
 }
