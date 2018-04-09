@@ -49,7 +49,7 @@ public class Modelo implements Runnable {
     public void run() {
         while (running) {
             try {
-                this.hilodibujar.sleep(100);
+                this.hilodibujar.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -135,8 +135,9 @@ public class Modelo implements Runnable {
     void pintarboton(int fila, int columna, int orientacion) {
         System.out.println("Click en boton");
 
-        int juegosigue = 1;
         int cierracelda = 0;
+        int malajugada = 0;//indica si el boton ya habia cambiado de color
+
         //busca el grupo correspondiente a la fila y columna
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
             GrupoBotones gb = this.sistema.getCuadros().get(i);
@@ -144,46 +145,66 @@ public class Modelo implements Runnable {
             //caso en el que la fila y columna no corresponden
             if (gb.getFila() == fila && gb.getColumna() == columna) {
                 if (orientacion == 0) {
-                    gb.getBotonarriba().setBackground(Color.red);
+
+                    if (gb.getBotonarriba().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonarriba().setBackground(Color.red);
+                    }
+
                 }
                 if (orientacion == 1) {
-                    gb.getBotonder().setBackground(Color.red);
+                    if (gb.getBotonder().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonder().setBackground(Color.red);
+                    }
+                    
                 }
                 if (orientacion == 2) {
-                    gb.getBotonabajo().setBackground(Color.red);
+                    if (gb.getBotonabajo().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonabajo().setBackground(Color.red);
+                    }
                 }
                 if (orientacion == 3) {
-                    gb.getBotonizq().setBackground(Color.red);
+                    if (gb.getBotonizq().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonizq().setBackground(Color.red);
+                    }
                 }
             }
             //verifica si la celda fue cerrada
-            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
+            if (malajugada != 1 && gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
                 if (gb.getBotoncentral().getBackground() != Color.red) {
                     gb.getBotoncentral().setBackground(Color.red);
                     cierracelda = 2;
                     this.sistema.setTurno(true);
                     //si no cerro ninguna celda hay cambio de turno
-                } 
+                }
                 /*
                 else {
                     cierracelda = 0;
                     this.sistema.setTurno(false);
                 }
-                */
+                 */
             }
-            //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
-            if (gb.getBotoncentral().getBackground() != Color.red) {
-                juegosigue = 0;
-            }
+
         }
-        if (cierracelda == 0) {
+        if (cierracelda == 0 && malajugada != 1) {
             this.sistema.setTurno(false);
         }
 
-        try {
-            this.sistema.getComunicador().enviarMovimiento(fila, columna, orientacion);
-        } catch (IOException ex) {
-            Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
+        if (malajugada != 1) {
+            try {
+                this.sistema.getComunicador().enviarMovimiento(fila, columna, orientacion);
+            } catch (IOException ex) {
+                Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se puede hacer esa jugada");
         }
 
     }

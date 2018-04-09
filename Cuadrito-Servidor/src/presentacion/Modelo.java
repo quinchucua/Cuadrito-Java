@@ -10,51 +10,51 @@ import logica.GrupoBotones;
 import logica.Sistema;
 
 public class Modelo implements Runnable {
-
+    
     private Sistema sistema;
     private Vista ventana;
     private Thread hilodibujar;
     private boolean running;
-
+    
     public Modelo() {
         this.hilodibujar = new Thread(this);
         this.running = false;
     }
-
+    
     public Sistema getSistema() {
         if (sistema == null) {
             sistema = new Sistema();
         }
         return sistema;
     }
-
+    
     public Vista getVentana() {
         if (ventana == null) {
             ventana = new Vista(this);
         }
         return ventana;
     }
-
+    
     public void iniciar() {
         this.getSistema();
         this.getVentana().setVisible(true);
         this.running = true;
         this.hilodibujar.start();
     }
-
+    
     @Override
     public void run() {
         while (running) {
             try {
-                this.hilodibujar.sleep(100);
+                this.hilodibujar.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
             }
             dibujar();
         }
-
+        
     }
-
+    
     public void dibujar() {
         this.ventana.getjPTablero().removeAll();
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
@@ -75,27 +75,27 @@ public class Modelo implements Runnable {
                 gb.getBotonder().setEnabled(true);
             }
         }
-
+        
         if (this.sistema.getComunicador().isClienteConectado()) {
             this.ventana.getjTConexion().setText("Jugador Conectado");
             this.ventana.getjTConexion().setBackground(Color.GREEN);
         }
         this.ventana.getjTMensajes().setText(this.sistema.getComunicador().getSbMensajes().toString());
-
+        
         this.ventana.getjPTablero().repaint();
         this.ventana.getjPTablero().updateUI();
     }
-
+    
     public void generartablero() {
         int filas;
         int columnas;
-
+        
         filas = Integer.parseInt(this.ventana.getjTFilas().getText());
         columnas = Integer.parseInt(this.ventana.getjTColumnas().getText());
-
+        
         this.sistema.borrarcuadros();
         this.sistema.crearcuadros(filas, columnas);
-
+        
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
             for (int j = 0; j < this.sistema.getCuadros().get(i).getComponentCount(); j++) {
                 JButton boton = (JButton) this.sistema.getCuadros().get(i).getComponent(j);
@@ -103,7 +103,7 @@ public class Modelo implements Runnable {
             }
         }
     }
-
+    
     public void imprimir() {
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
             System.out.println("_____________________________________________________________________");
@@ -113,7 +113,7 @@ public class Modelo implements Runnable {
             System.out.println("der : " + this.sistema.getCuadros().get(i).getBotonder().getBackground().toString());
         }
     }
-
+    
     void permitirconexion() {
         if (this.sistema.tablerocreado()) {
             try {
@@ -126,7 +126,7 @@ public class Modelo implements Runnable {
                 this.sistema.setNombreservidor(this.ventana.getjTNombre().getText());
                 this.ventana.getjTConexion().setText("Esperando Jugador...");
                 this.sistema.getComunicador().activarEsperaConexiones();
-
+                
             } catch (IOException ex) {
                 Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -134,11 +134,13 @@ public class Modelo implements Runnable {
             JOptionPane.showMessageDialog(ventana, "Tiene que crear el tablero antes de permitir conexiones.");
         }
     }
-
+    
     void pintarboton(int fila, int columna, int orientacion) {
         System.out.println("Click en boton");
         
         int cierracelda = 0;
+        int malajugada = 0;//indica si el boton ya habia cambiado de color
+
         //busca el grupo correspondiente a la fila y columna
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
             GrupoBotones gb = this.sistema.getCuadros().get(i);
@@ -146,20 +148,38 @@ public class Modelo implements Runnable {
             //caso en el que la fila y columna no corresponden
             if (gb.getFila() == fila && gb.getColumna() == columna) {
                 if (orientacion == 0) {
-                    gb.getBotonarriba().setBackground(Color.red);
+                    
+                    if (gb.getBotonarriba().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonarriba().setBackground(Color.red);
+                    }
+                    
                 }
                 if (orientacion == 1) {
-                    gb.getBotonder().setBackground(Color.red);
+                    if (gb.getBotonder().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonder().setBackground(Color.red);
+                    }
                 }
                 if (orientacion == 2) {
-                    gb.getBotonabajo().setBackground(Color.red);
+                    if (gb.getBotonabajo().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonabajo().setBackground(Color.red);
+                    }
                 }
                 if (orientacion == 3) {
-                    gb.getBotonizq().setBackground(Color.red);
+                    if (gb.getBotonizq().getBackground() == Color.red) {
+                        malajugada = 1;
+                    } else {
+                        gb.getBotonizq().setBackground(Color.red);
+                    }
                 }
             }
             //verifica si la celda fue cerrada
-            if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
+            if (malajugada != 1 && gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
                 if (gb.getBotoncentral().getBackground() != Color.red) {
                     gb.getBotoncentral().setBackground(Color.red);
                     cierracelda = 2;
@@ -171,19 +191,23 @@ public class Modelo implements Runnable {
                     cierracelda = 0;
                     this.sistema.setTurno(false);
                 }
-                */
+                 */
             }
             
         }
-        if (cierracelda == 0) {
+        if (cierracelda == 0 && malajugada != 1) {
             this.sistema.setTurno(false);
         }
-
-        try {
-            this.sistema.getComunicador().getListaClientes().get(0).enviarMovimiento(fila, columna, orientacion);
-        } catch (IOException ex) {
-            Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
+        
+        if (malajugada != 1) {
+            try {
+                this.sistema.getComunicador().getListaClientes().get(0).enviarMovimiento(fila, columna, orientacion);
+            } catch (IOException ex) {
+                Logger.getLogger(Modelo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se puede hacer esa jugada");
         }
-
+        
     }
 }

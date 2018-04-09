@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -102,6 +104,11 @@ public class Cliente extends Thread implements Runnable{
     @Override
     public void run() {
         while(conectado){
+            try {
+                this.hiloLectura.sleep(200);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
             try {
                 leerMensaje();
             } catch (IOException ex) {

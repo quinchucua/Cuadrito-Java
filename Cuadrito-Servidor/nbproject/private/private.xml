@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SEMESTRE/Especializacion/Informatica%201/CUADRITO/CODIGO/Cuadrito-Servidor/src/logica/Comunicador.java</file>
-            <file>file:/D:/SEMESTRE/Especializacion/Informatica%201/CUADRITO/CODIGO/Cuadrito-Servidor/src/logica/Cliente.java</file>
+            <file>file:/D:/SB/Cuadrito-Java-master/Cuadrito-Servidor/src/presentacion/Modelo.java</file>
+            <file>file:/D:/SB/Cuadrito-Java-master/Cuadrito-Servidor/src/logica/Cliente.java</file>
+            <file>file:/D:/SB/Cuadrito-Java-master/Cuadrito-Servidor/src/presentacion/Controlador.java</file>
+            <file>file:/D:/SB/Cuadrito-Java-master/Cuadrito-Servidor/src/logica/Comunicador.java</file>
         </group>
     </open-files>
 </project-private>
