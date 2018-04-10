@@ -61,7 +61,7 @@ public class Comunicador implements Runnable {
     public void enviarMensaje(String msg) throws IOException {
         // Enviar este mensaje a todos los clientes
         Cliente host;
-        sbMensajes.append(this.sistema.getNombreservidor() + " : " + msg + "\n");
+        sbMensajes.append(this.sistema.getNombreservidor()).append(" : ").append(msg).append("\n");
         for (int c = 0; c < listaClientes.size(); c++) {
             host = listaClientes.get(c);
             host.enviarMensaje(msg);

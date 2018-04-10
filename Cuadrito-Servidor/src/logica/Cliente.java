@@ -45,7 +45,7 @@ public class Cliente extends Thread implements Runnable{
         hiloLectura = new Thread(this);   
         conectado = true;
         date = new Date();
-        dateFormat = new SimpleDateFormat("YYYYMMDD");
+        dateFormat = new SimpleDateFormat("yyyymmdd");
         hourFormat = new SimpleDateFormat("HHmmss");
         //hiloLectura.start();
     }
@@ -57,7 +57,7 @@ public class Cliente extends Thread implements Runnable{
         String mensaje;
         datosEntrada.read(buffer);
         mensaje = new String(buffer);
-        sistemaServer.getSbMensajes().append(this.sistemaServer.getSistema().getNombrecliente()+" : " + cliente.getInetAddress().getHostAddress() + ": " + mensaje + "\n");
+        sistemaServer.getSbMensajes().append(this.sistemaServer.getSistema().getNombrecliente()).append(" : ").append(cliente.getInetAddress().getHostAddress()).append(": ").append(mensaje).append("\n");
         System.out.println(this.sistemaServer.getSistema().getNombrecliente()+" : " + cliente.getInetAddress().getHostAddress() + ": " + mensaje + "\n");
         // replicamos a los demás clientes este mensaje
         //sistemaServer.enviarMensaje(cliente.getInetAddress().getHostAddress() + ": " + mensaje);7
@@ -89,6 +89,7 @@ public class Cliente extends Thread implements Runnable{
     }
     
     public void enviarMensaje(String msg) throws IOException {
+        sistemaServer.getSbMensajes().append(this.sistemaServer.getSistema().getNombreservidor()).append(" : ").append(msg).append("\n");
         datosSalida.write(msg.getBytes());
         //mensajes.append("Enviamos: " + msg + "\n");
     }

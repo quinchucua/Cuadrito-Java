@@ -44,7 +44,7 @@ public class Comunicador implements Runnable {
         conectado = false;
         mensajes = new StringBuffer();
         date = new Date();
-        dateFormat = new SimpleDateFormat("YYYYMMDD");
+        dateFormat = new SimpleDateFormat("yyyymmdd");
         hourFormat = new SimpleDateFormat("HHmmss");
     }
 
