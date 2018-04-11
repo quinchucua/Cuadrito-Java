@@ -82,16 +82,45 @@ public class Modelo implements Runnable {
 
         if (this.sistema.getComunicador().isConectado()) {
             this.ventana.getjBConectarse().setBackground(Color.GREEN);
+        } else {
+            this.ventana.getjBConectarse().setEnabled(true);
+            this.ventana.getjTNombre().setEnabled(true);
+            this.ventana.getjTDireccionIP().setEnabled(true);
+            this.ventana.getjTPuerto().setEnabled(true);
         }
 
         if (this.sistema.isTablerocreado()) {
             agregarcontrolador();
             this.sistema.setTablerocreado(false);
         }
+
+        if (this.sistema.getJuegosigue() == 1) {
+            if (this.sistema.getPuntoscliente() == this.sistema.getPuntosservidor()) {
+                JOptionPane.showMessageDialog(null, "Juego Terminado : Empate");
+                this.sistema.setJuegosigue(0);
+            } else if (this.sistema.getPuntoscliente() < this.sistema.getPuntosservidor()) {
+                JOptionPane.showMessageDialog(null, "Juego Terminado : Gana : " + this.sistema.getNombrecliente());
+                this.sistema.setJuegosigue(0);
+            } else if (this.sistema.getPuntoscliente() > this.sistema.getPuntosservidor()) {
+                JOptionPane.showMessageDialog(null, "Juego Terminado : Gana : " + this.sistema.getNombreservidor());
+                this.sistema.setJuegosigue(0);
+            }
+            
+            this.sistema.getComunicador().getHiloLectura().stop();
+            this.sistema=null;
+            this.sistema = getSistema();
+            this.ventana.getjBConectarse().setBackground(null);
+            this.ventana.getjBConectarse().setEnabled(true);
+            this.ventana.getjTNombre().setEnabled(true);
+            this.ventana.getjTDireccionIP().setEnabled(true);
+            this.ventana.getjTPuerto().setEnabled(true);
+
+        }
         this.ventana.getjTMensajes().setText(this.sistema.getComunicador().getMensajes().toString());
 
         this.ventana.getjPTablero().repaint();
         this.ventana.getjPTablero().updateUI();
+
     }
 
     public void agregarcontrolador() {
@@ -116,12 +145,12 @@ public class Modelo implements Runnable {
     void conectarse() {
         try {
 
+            this.sistema.getComunicador().conectar(this.ventana.getjTDireccionIP().getText(), Integer.parseInt(this.ventana.getjTPuerto().getText()));
             this.ventana.getjBConectarse().setEnabled(false);
             this.ventana.getjTNombre().setEnabled(false);
             this.ventana.getjTDireccionIP().setEnabled(false);
             this.ventana.getjTPuerto().setEnabled(false);
             this.sistema.setNombrecliente(this.ventana.getjTNombre().getText());
-            this.sistema.getComunicador().conectar(this.ventana.getjTDireccionIP().getText(), Integer.parseInt(this.ventana.getjTPuerto().getText())); //se tiene que modificar, rompe el patron
 
         } catch (ConnectException ex) {
             JOptionPane.showMessageDialog(null, "El servidor no existe");
@@ -137,6 +166,9 @@ public class Modelo implements Runnable {
 
         int cierracelda = 0;
         int malajugada = 0;//indica si el boton ya habia cambiado de color
+
+        this.sistema.setPuntoscliente(0);
+        this.sistema.setPuntosservidor(0);
 
         //busca el grupo correspondiente a la fila y columna
         for (int i = 0; i < this.sistema.getCuadros().size(); i++) {
@@ -159,7 +191,7 @@ public class Modelo implements Runnable {
                     } else {
                         gb.getBotonder().setBackground(Color.red);
                     }
-                    
+
                 }
                 if (orientacion == 2) {
                     if (gb.getBotonabajo().getBackground() == Color.red) {
@@ -180,6 +212,7 @@ public class Modelo implements Runnable {
             if (malajugada != 1 && gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
                 if (gb.getBotoncentral().getBackground() != Color.red) {
                     gb.getBotoncentral().setBackground(Color.red);
+                    gb.getBotoncentral().setBorder(null);
                     cierracelda = 2;
                     this.sistema.setTurno(true);
                     //si no cerro ninguna celda hay cambio de turno
@@ -192,6 +225,19 @@ public class Modelo implements Runnable {
                  */
             }
 
+            //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
+            if (gb.getBotoncentral().getBackground() != Color.red) {
+                this.sistema.setJuegosigue(0);
+            } else {
+                if (gb.getBotoncentral().getBorder() != null) {
+                    this.sistema.setPuntoscliente(this.sistema.getPuntoscliente() + 1);
+                } else {
+                    this.sistema.setPuntosservidor(this.sistema.getPuntosservidor() + 1);
+                }
+            }
+        }
+        if (this.sistema.getPuntoscliente() + this.sistema.getPuntosservidor() == this.sistema.getCuadros().size()) {
+            this.sistema.setJuegosigue(1);
         }
         if (cierracelda == 0 && malajugada != 1) {
             this.sistema.setTurno(false);

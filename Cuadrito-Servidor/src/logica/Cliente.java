@@ -96,6 +96,7 @@ public class Cliente extends Thread implements Runnable{
     
     public void terminarConexiones() throws IOException{
         conectado = false;
+        this.hiloLectura.stop();
         hiloLectura = null;
         datosEntrada.close();
         datosSalida.close();

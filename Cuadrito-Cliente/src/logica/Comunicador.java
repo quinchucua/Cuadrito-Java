@@ -66,7 +66,7 @@ public class Comunicador implements Runnable {
     //envia el mensaje al servidor 
     public void enviarMensaje(String msg) throws IOException {
         datosSalida.write(msg.getBytes());
-        mensajes.append(this.sistema.getNombrecliente() + " : " + msg + "\n");
+        mensajes.append(this.sistema.getNombrecliente()).append(" : ").append(msg).append("\n");
         System.out.println(this.sistema.getNombrecliente() + " : " + msg + "\n");
     }
 
@@ -77,27 +77,31 @@ public class Comunicador implements Runnable {
         datosEntrada.read(buffer);
         // si llego aqui, es porque algo llego
         msg = new String(buffer);
-        mensajes.append(this.sistema.getNombreservidor() + " : " + msg + "\n");
-        recibeMensaje = true;
-        if (msg.substring(17, 20).equals("JUG")) {
-            int fila = Integer.parseInt(msg.substring(21, 23));
-            int columna = Integer.parseInt(msg.substring(24, 26));
-            int orientacion = Integer.parseInt(msg.substring(27, 28));
-            this.sistema.pintarboton(fila, columna, orientacion);
-        }
-
-        if (msg.substring(0, 2).equals("OK") && msg.length() == 6) {
-            int cerrado = Integer.parseInt(msg.substring(3, 4));
-            int juegosigue = Integer.parseInt(msg.substring(5, 6));
-            if (cerrado == 0) {
-                this.sistema.setTurno(false);
-            } else if (cerrado == 2) {
-                this.sistema.setTurno(true);
-            }
-            if (juegosigue == 1) {
-                System.out.println("Se termina el juego");
+        if (msg.substring(0,1).equals("")) {
+            this.conectado=false;
+            this.hiloLectura.stop();
+        } else {
+            mensajes.append(this.sistema.getNombreservidor()).append(" : ").append(msg).append("\n");
+            recibeMensaje = true;
+            if (msg.substring(17, 20).equals("JUG")) {
+                int fila = Integer.parseInt(msg.substring(21, 23));
+                int columna = Integer.parseInt(msg.substring(24, 26));
+                int orientacion = Integer.parseInt(msg.substring(27, 28));
+                this.sistema.pintarboton(fila, columna, orientacion);
             }
 
+            if (msg.substring(0, 2).equals("OK") && msg.length() == 6) {
+                int cerrado = Integer.parseInt(msg.substring(3, 4));
+                int juegosigue = Integer.parseInt(msg.substring(5, 6));
+                if (cerrado == 0) {
+                    this.sistema.setTurno(false);
+                } else if (cerrado == 2) {
+                    this.sistema.setTurno(true);
+                }
+                if (juegosigue == 1) {
+                    System.out.println("Se termina el juego");
+                }
+            }
         }
         return msg;
     }
@@ -109,6 +113,7 @@ public class Comunicador implements Runnable {
 
         while (conectado) {
             try {
+                System.out.println("Servidor Conectado: " + this.servidor.getChannel());
                 validarComando(leermensaje());
             } catch (IOException ex) {
                 Logger.getLogger(Comunicador.class.getName()).log(Level.SEVERE, null, ex);
@@ -250,4 +255,13 @@ public class Comunicador implements Runnable {
     public boolean isConectado() {
         return conectado;
     }
+
+    public Thread getHiloLectura() {
+        return hiloLectura;
+    }
+
+    public void setHiloLectura(Thread hiloLectura) {
+        this.hiloLectura = hiloLectura;
+    }
+
 }

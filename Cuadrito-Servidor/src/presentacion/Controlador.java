@@ -36,7 +36,13 @@ public class Controlador implements ActionListener{
 */      //boton para iniciar el tablero del juego
         if(boton == this.ventana.getjBPermitirConexion())
         {
-            this.modelo.permitirconexion();
+            if(this.ventana.getjBPermitirConexion().getText().equals("Permitir Conexion"))
+            {
+                this.modelo.permitirconexion();
+            }else if (this.ventana.getjBPermitirConexion().getText().equals("Cerrar Conexion"))
+            {
+                this.modelo.cerrarconexion();
+            }
         }
         if(boton == this.ventana.getjBCrearTablero())
         {

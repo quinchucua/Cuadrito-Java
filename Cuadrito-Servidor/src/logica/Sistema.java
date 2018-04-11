@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.border.LineBorder;
 
-public class Sistema 
-{
+public class Sistema {
+
     ArrayList<GrupoBotones> cuadros;
     Comunicador comunicador;
     private int filas;
@@ -14,34 +14,39 @@ public class Sistema
     private String nombreservidor = "Servidor";
     private String nombrecliente = "Cliente";
     private boolean turno = false;
+    private int juegosigue;
+    private int puntoscliente;
+    private int puntosservidor;
 
     public Sistema() {
         this.cuadros = new ArrayList();
         this.comunicador = new Comunicador(this);
     }
 
-    public void crearcuadros(int filas, int columnas)
-    {
-        this.filas=filas;
-        this.columnas=columnas;
+    public void crearcuadros(int filas, int columnas) {
+        this.filas = filas;
+        this.columnas = columnas;
         int tamanox = 50;//(6*80)/columnas;
         int tamanoy = 50;//(8*80)/filas;
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
-                GrupoBotones gb = new GrupoBotones(i,j,this,tamanox,tamanoy);
+                GrupoBotones gb = new GrupoBotones(i, j, this, tamanox, tamanoy);
                 cuadros.add(gb);
             }
         }
     }
 
-    public boolean tablerocreado()
-    {
-        return this.cuadros.size()!=0;
+    public boolean tablerocreado() {
+        return this.cuadros.size() != 0;
     }
-    
+
     public void pintarboton(int fila, int columna, int orientacion) throws IOException {
-        int juegosigue = 1;
+        this.juegosigue = 1;
         int cierracelda = 0;
+        
+        this.setPuntoscliente(0);
+        this.setPuntosservidor(0);
+        
         //busca el grupo correspondiente a la fila y columna
         for (int i = 0; i < this.cuadros.size(); i++) {
             GrupoBotones gb = this.cuadros.get(i);
@@ -64,7 +69,7 @@ public class Sistema
             //verifica si la celda fue cerrada
             if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
                 if (gb.getBotoncentral().getBackground() != Color.red) {
-                    gb.getBotoncentral().setBorder(new LineBorder(Color.GREEN,5));
+                    gb.getBotoncentral().setBorder(new LineBorder(Color.GREEN, 5));
                     gb.getBotoncentral().setBackground(Color.red);
                     cierracelda = 2;
                     this.turno = false;
@@ -75,20 +80,29 @@ public class Sistema
                     cierracelda = 0;
                     this.turno = true;
                 }
-                */
+                 */
             }
             //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
+            //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
             if (gb.getBotoncentral().getBackground() != Color.red) {
-                juegosigue = 0;
+                this.juegosigue = 0;
+            } else {
+                if (gb.getBotoncentral().getBorder() != null) {
+                    this.puntosservidor++;
+                } else {
+                    this.puntoscliente++;
+                }
+            }
+            if (this.puntoscliente + this.puntosservidor == this.getCuadros().size()) {
+                this.juegosigue = 1;
             }
         }
-        if(cierracelda==0)
-        {
+        if (cierracelda == 0) {
             this.turno = true;
         }
         this.comunicador.getListaClientes().get(0).respondermovimiento(cierracelda, juegosigue);
     }
-    
+
     public ArrayList<GrupoBotones> getCuadros() {
         return cuadros;
     }
@@ -107,7 +121,7 @@ public class Sistema
 
     public void setComunicador(Comunicador comunicador) {
         this.comunicador = comunicador;
-    } 
+    }
 
     public int getFilas() {
         return filas;
@@ -149,5 +163,29 @@ public class Sistema
         this.turno = turno;
     }
 
-        
+    public int getJuegosigue() {
+        return juegosigue;
+    }
+
+    public void setJuegosigue(int juegosigue) {
+        this.juegosigue = juegosigue;
+    }
+
+    public int getPuntoscliente() {
+        return puntoscliente;
+    }
+
+    public void setPuntoscliente(int puntoscliente) {
+        this.puntoscliente = puntoscliente;
+    }
+
+    public int getPuntosservidor() {
+        return puntosservidor;
+    }
+
+    public void setPuntosservidor(int puntosservidor) {
+        this.puntosservidor = puntosservidor;
+    }
+    
+    
 }

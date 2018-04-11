@@ -13,6 +13,9 @@ public class Sistema {
     private String nombreservidor = "Servidor";
     private boolean turno = false;
     private boolean tablerocreado = false;
+    private int juegosigue;
+    private int puntoscliente = 0;
+    private int puntosservidor = 0;
 
     public Sistema() {
         this.cuadros = new ArrayList();
@@ -32,8 +35,11 @@ public class Sistema {
     }
 
     public void pintarboton(int fila, int columna, int orientacion) throws IOException {
-        int juegosigue = 1;
+        this.juegosigue = 0;
         int cierracelda = 0;
+
+        this.setPuntoscliente(0);
+        this.setPuntosservidor(0);
         //busca el grupo correspondiente a la fila y columna
         for (int i = 0; i < this.cuadros.size(); i++) {
             GrupoBotones gb = this.cuadros.get(i);
@@ -56,7 +62,7 @@ public class Sistema {
             //verifica si la celda fue cerrada
             if (gb.getBotonarriba().getBackground() == Color.red && gb.getBotonder().getBackground() == Color.red && gb.getBotonabajo().getBackground() == Color.red && gb.getBotonizq().getBackground() == Color.red) {
                 if (gb.getBotoncentral().getBackground() != Color.red) {
-                    gb.getBotoncentral().setBorder(new LineBorder(Color.GREEN,5));
+                    gb.getBotoncentral().setBorder(new LineBorder(Color.GREEN, 5));
                     gb.getBotoncentral().setBackground(Color.red);
                     cierracelda = 2;
                     this.turno = false;
@@ -67,15 +73,23 @@ public class Sistema {
                     cierracelda = 0;
                     this.turno = true;
                 }
-                */
-            } 
+                 */
+            }
             //verifica cada grupo para saber si el boton central ya cambio de color e identificar si el juego sigue
             if (gb.getBotoncentral().getBackground() != Color.red) {
-                juegosigue = 0;
+                this.juegosigue = 0;
+            } else {
+                if (gb.getBotoncentral().getBorder() != null) {
+                    this.puntoscliente++;
+                } else {
+                    this.puntosservidor++;
+                }
             }
         }
-        if(cierracelda==0)
-        {
+        if (this.puntoscliente + this.puntosservidor == this.getCuadros().size()) {
+            this.juegosigue = 1;
+        }
+        if (cierracelda == 0) {
             this.turno = true;
         }
         this.comunicador.respondermovimiento(cierracelda, juegosigue);
@@ -131,6 +145,30 @@ public class Sistema {
 
     public void setTablerocreado(boolean tablerocreado) {
         this.tablerocreado = tablerocreado;
+    }
+
+    public int getJuegosigue() {
+        return juegosigue;
+    }
+
+    public void setJuegosigue(int juegosigue) {
+        this.juegosigue = juegosigue;
+    }
+
+    public int getPuntoscliente() {
+        return puntoscliente;
+    }
+
+    public void setPuntoscliente(int puntoscliente) {
+        this.puntoscliente = puntoscliente;
+    }
+
+    public int getPuntosservidor() {
+        return puntosservidor;
+    }
+
+    public void setPuntosservidor(int puntosservidor) {
+        this.puntosservidor = puntosservidor;
     }
 
 }

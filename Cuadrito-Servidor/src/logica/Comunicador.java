@@ -23,7 +23,6 @@ public class Comunicador implements Runnable {
     private Socket cliente;
     private int puerto;
     private Thread hiloConexiones;
-    private boolean esperandoConexiones;
 
     private StringBuffer sbMensajes;
     private ArrayList<Cliente> listaClientes;
@@ -34,10 +33,10 @@ public class Comunicador implements Runnable {
     private Sistema sistema;
 
     public Comunicador(Sistema sistema) {
-        listaClientes = new ArrayList<Cliente>();
+        listaClientes = new ArrayList();
         sbMensajes = new StringBuffer();
-        esperandoConexiones = true;
         this.sistema = sistema;
+        this.clienteconectado=false;
     }
 
     public void activarEsperaConexiones() throws IOException {
@@ -70,7 +69,7 @@ public class Comunicador implements Runnable {
 
     @Override
     public void run() {
-        while (esperandoConexiones && this.listaClientes.size() == 0) {
+        while (this.listaClientes.size() == 0) {
             System.out.println("Permitiendo conexion");
             try {
                 cliente = server.accept(); //espera a que alguien se conecte
@@ -82,7 +81,26 @@ public class Comunicador implements Runnable {
                 if (this.comandoValido) {
                     this.clienteconectado = true;
 
-                    enviarMensaje("OK," + this.sistema.getFilas() + "," + this.sistema.getColumnas());
+                    if(this.sistema.getFilas()<10)
+                    {
+                        if(this.sistema.getColumnas()<10)
+                        {
+                            enviarMensaje("OK,0" + this.sistema.getFilas() + ",0" + this.sistema.getColumnas());
+                        }else
+                        {
+                            enviarMensaje("OK,0" + this.sistema.getFilas() + "," + this.sistema.getColumnas());
+                        }
+                        
+                    }else
+                    {
+                        if(this.sistema.getColumnas()<10)
+                        {
+                            enviarMensaje("OK," + this.sistema.getFilas() + ",0" + this.sistema.getColumnas());
+                        }else
+                        {
+                            enviarMensaje("OK," + this.sistema.getFilas() + "," + this.sistema.getColumnas());
+                        }
+                    }
                     System.out.println("La conexion fue aceptada");
                     comunicaciondejuego();
                 } else {
@@ -158,14 +176,6 @@ public class Comunicador implements Runnable {
         System.out.println("Se deben recibir los comandos de juego");
     }
 
-    public boolean isEsperandoConexiones() {
-        return esperandoConexiones;
-    }
-
-    public void setEsperandoConexiones(boolean esperandoConexiones) {
-        this.esperandoConexiones = esperandoConexiones;
-    }
-
     public ArrayList<Cliente> getListaClientes() {
         return listaClientes;
     }
@@ -177,6 +187,11 @@ public class Comunicador implements Runnable {
             host = listaClientes.get(c);
             host.terminarConexiones();
         }
+        this.clienteconectado=false;
+        this.listaClientes = new ArrayList();
+        this.hiloConexiones.stop();
+        server.close();
+        
     }
 
     public boolean isClienteConectado() {
