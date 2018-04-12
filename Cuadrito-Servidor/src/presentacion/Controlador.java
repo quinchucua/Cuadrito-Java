@@ -11,11 +11,9 @@ import logica.GrupoBotones;
 public class Controlador implements ActionListener{
 
     private final Vista ventana;
-    private Modelo modelo;
 
-    public Controlador(Vista vista, Modelo modelo) {
+    public Controlador(Vista vista) {
         ventana = vista;
-        this.modelo = (modelo);
     }
 
 
@@ -38,15 +36,15 @@ public class Controlador implements ActionListener{
         {
             if(this.ventana.getjBPermitirConexion().getText().equals("Permitir Conexion"))
             {
-                this.modelo.permitirconexion();
+                this.ventana.getModelo().permitirconexion();
             }else if (this.ventana.getjBPermitirConexion().getText().equals("Cerrar Conexion"))
             {
-                this.modelo.cerrarconexion();
+                this.ventana.getModelo().cerrarconexion();
             }
         }
         if(boton == this.ventana.getjBCrearTablero())
         {
-            this.modelo.generartablero();
+            this.ventana.getModelo().generartablero();
         }
         //se busca la ubicacion del boton que genero el evento
         //se buscan los componentes del panel del tablero
@@ -59,7 +57,7 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Izquierda ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),3);
+                this.ventana.getModelo().pintarboton(gb.getFila(),gb.getColumna(),3);
                 //gb.getBotonizq().setBackground(Color.red);
                 break;
                 
@@ -70,7 +68,7 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Arriba ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),0);
+                this.ventana.getModelo().pintarboton(gb.getFila(),gb.getColumna(),0);
                 //gb.getBotonarriba().setBackground(Color.red);
                 break;
             }
@@ -80,7 +78,7 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Derecha ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),1);
+                this.ventana.getModelo().pintarboton(gb.getFila(),gb.getColumna(),1);
                 //gb.getBotonder().setBackground(Color.red);
                 break;
             }
@@ -90,7 +88,7 @@ public class Controlador implements ActionListener{
                 System.out.println("Boton : Abajo ");
                 System.out.println("Fila : "+gb.getFila());
                 System.out.println("Columna : "+gb.getColumna());
-                this.modelo.pintarboton(gb.getFila(),gb.getColumna(),2);
+                this.ventana.getModelo().pintarboton(gb.getFila(),gb.getColumna(),2);
                 //gb.getBotonabajo().setBackground(Color.red);
                 break;
             }

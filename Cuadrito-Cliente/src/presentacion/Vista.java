@@ -22,12 +22,12 @@ public class Vista extends JFrame {
     /**
      * Creates new form Vista
      */
-    private final Modelo modelo;
+    private Modelo modelo;
     private Controlador controlador;
 
     public Vista(Modelo modelo) {
         this.modelo = modelo;
-        this.controlador = new Controlador(this, modelo);
+        this.controlador = new Controlador(this);
         initComponents();
         agregarcontroladores();
         
@@ -270,6 +270,14 @@ public class Vista extends JFrame {
 
     public void setjTNombre(JTextField jTNombre) {
         this.jTNombre = jTNombre;
+    }
+
+    public Modelo getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(Modelo modelo) {
+        this.modelo = modelo;
     }
 
        

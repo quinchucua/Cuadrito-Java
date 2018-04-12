@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author Estudiantes
  */
-public class Cliente extends Thread implements Runnable{
+public class Cliente implements Runnable{
 
     private final String clienteConectado;
     private final DataInputStream datosEntrada;
